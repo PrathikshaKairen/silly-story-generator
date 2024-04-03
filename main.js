@@ -1,38 +1,62 @@
-// Variables and Functions
+// 1. COMPLETE VARIABLE AND FUNCTION DEFINITIONS
 const customName = document.getElementById('customname');
 const randomize = document.querySelector('.randomize');
 const story = document.querySelector('.story');
 
-function randomValueFromArray(array) {
+function randomValueFromArray(array){
   const random = Math.floor(Math.random()*array.length);
   return array[random];
 }
 
-const texts = {
-  temperature: 'It was 94 fahrenheit outside, so ',
-  location: ' went for a walk. When they got to ',
-  action: ', they stared in horror for a few moments, then ',
-  character: '. Bob saw the whole thing, but was not surprised — ',
-  weight: ' weighs 300 pounds, and it was a hot day.',
-};
+// 2. RAW TEXT STRINGS
+const storyText = "It was 94 fahrenheit outside, so :insertx: went for a walk. When they got to :inserty:, they stared in horror for a few moments, then :insertz:. Bob saw the whole thing, but was not surprised — :insertx: weighs 300 pounds, and it was a hot day.";
 
-const locations = ['the soup kitchen', 'Disneyland', 'the White House'];
-const actions = ['spontaneously combusted', 'melted into a puddle on the sidewalk', 'turned into a slug and crawled away'];
+const insertX = [
+  "Willy the Goblin",
+  "Big Daddy",
+  "Father Christmas"
+];
 
-// Event Listeners
+const insertY = [
+  "the soup kitchen",
+  "Disneyland",
+  "the White House"
+];
+
+const insertZ = [
+  "spontaneously combusted",
+  "melted into a puddle on the sidewalk",
+  "turned into a slug and crawled away"
+];
+
+// 3. EVENT LISTENER AND PARTIAL FUNCTION DEFINITION
 randomize.addEventListener('click', result);
 
-// Functions
 function result() {
+  let newStory = storyText;
+
+  const xItem = randomValueFromArray(insertX);
+  const yItem = randomValueFromArray(insertY);
+  const zItem = randomValueFromArray(insertZ);
+
+  newStory = newStory
+    .replace(':insertx:', xItem)
+    .replace(':inserty:', yItem)
+    .replace(':insertz:', zItem);
+
   if (customName.value !== '') {
     const name = customName.value;
-    const weight = Math.round(300);
-    const temperature = Math.round(94);
-
-    if (document.getElementById("uk").checked) {
-      story.textContent = texts.temperature + name + texts.location + randomValueFromArray(locations) + texts.action + randomValueFromArray(actions) + name + texts.character + weight + texts.weight;
-    }
-
-    story.style.visibility = 'visible';
+    newStory = newStory.replace(/Bob/g, name);
   }
+
+  if (document.getElementById("uk").checked) {
+    const weight = Math.round(300 / 14); // Convert pounds to stones
+    const temperature = Math.round((94 - 32) * (5 / 9)); // Convert Fahrenheit to Celsius
+    newStory = newStory
+      .replace('300 pounds', `${weight} stone`)
+      .replace('94 fahrenheit', `${temperature} centigrade`);
+  }
+
+  story.textContent = newStory;
+  story.style.visibility = 'visible';
 }
